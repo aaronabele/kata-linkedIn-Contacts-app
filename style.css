@@ -47,7 +47,8 @@ body {
   align-items: flex-start;
 }
 
-.overall-card-wrapper {
+.overall-card-wrapper,
+ul {
   width: 100%;
   height: auto;
   display: grid;
@@ -64,6 +65,7 @@ body {
   justify-content: center;
   align-items: center;
   width: 24.5rem;
+  height: auto;
 }
 
 .card-people-wrapper {
@@ -79,17 +81,24 @@ body {
 }
 
 .div-for-backgroundimg {
+  position: relative;
   height: 8rem;
   width: 100%;
   border-radius: 1rem 1rem 0 0;
   background-image: var(--set-background-image);
   background-size: cover;
   background-repeat: no-repeat;
+  border: 1px solid lightgray;
 }
 
 .div-for-rests {
-  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 20rem;
   width: 100%;
+  margin-top: 4rem;
 }
 
 .set-firstname {
@@ -122,11 +131,11 @@ body {
   border-radius: 50%;
   position: absolute;
   top: 0;
-  bottom: 1;
+  bottom: 0;
   left: 1;
   right: 1;
   width: 10rem;
-  margin: 2rem 0;
+  margin-top: 3rem;
 }
 
 .btn-delete {
@@ -146,4 +155,9 @@ body {
   line-height: 0.1rem;
   padding-bottom: 0.5rem;
   font-weight: 100;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
 }

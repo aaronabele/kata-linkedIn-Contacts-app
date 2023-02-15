@@ -1,82 +1,137 @@
-//BTN
-let visible = false;
-const btnConnect = document.querySelectorAll(".btn-connect");
-const pendingInvs = document.querySelector(".text-pending-invitations");
-let counter = 0;
-
-function setFirstState() {
-  for (let i = 0; i < btnConnect.length; i++) {
-    if (btnConnect[i]) {
-      btnConnect[i].classList.add("invisible");
-    }
-  }
-}
-setFirstState();
-
-function changeState() {
-  for (let i = 0; i < btnConnect.length; i++) {
-    btnConnect[i].addEventListener("click", () => {
-      if (btnConnect[i].classList.value === "btn-connect invisible") {
-        btnConnect[i].innerHTML = "Pending";
-        btnConnect[i].value = "Pending";
-        btnConnect[i].classList.remove("invisible");
-        counter++;
-        pendingInvs.innerHTML = counter + " Pending invitations";
-      } else {
-        btnConnect[i].innerHTML = "Connect";
-        btnConnect[i].value = "Connect";
-        btnConnect[i].classList.add("invisible");
-        counter--;
-        if (counter === 0) {
-          pendingInvs.innerHTML = "No Pending invitations";
-        } else {
-          pendingInvs.innerHTML = counter + " Pending invitations";
-        }
-      }
-    });
-  }
-}
-changeState();
-
 //GET
-const singlePerson = document.querySelectorAll(".div-for-backgroundimg");
-const setFirstname = document.querySelectorAll(".set-firstname");
-const setJob = document.querySelectorAll(".set-job");
-const setConnections = document.querySelectorAll(".set-connections");
-const profilePicture = document.querySelectorAll(".profile-picture");
-const cards = document.querySelectorAll(".card-people-wrapper");
+const list = document.querySelector("#list");
+const overallWrapper = document.querySelector(".overall-card-wrapper");
 let persons = [];
+let id = 1;
 
 function getPersonData() {
-  fetch("https://dummy-apis.netlify.app/api/contact-suggestions?count=1")
-    .then((request) => request.json())
-    .then((people) => {
-      persons = people;
-      renderPersons(persons);
-    });
+  for (let i = 0; i < 8; i++) {
+    fetch("https://dummy-apis.netlify.app/api/contact-suggestions?count=1")
+      .then((request) => request.json())
+      .then((people) => {
+        people.forEach((typ) => {
+          typ.id = id++;
+          typ.done = false;
+          persons.push(typ.id, typ.done);
+          console.log(persons);
+        });
+        persons = people;
+        renderPersons();
+      });
+  }
 }
 getPersonData();
 
-function renderPersons(persons) {
-  for (let i = 0; i < persons.length; i++) {
-    setFirstname[i].innerHTML =
-      persons[i].name.title +
+function renderPersons() {
+  persons.forEach((person) => {
+    const newPerson = document.createElement("li");
+
+    const personWrapper = document.createElement("div");
+    personWrapper.classList.add("card-wrapper");
+
+    const cardWrapper = document.createElement("div");
+    cardWrapper.classList.add("card-people-wrapper");
+
+    const backgroundWrapper = document.createElement("div");
+
+    backgroundWrapper.classList.add("div-for-backgroundimg");
+
+    if (person.backgroundImage) {
+      backgroundWrapper.style.setProperty(
+        "--set-background-image",
+        "url('" + person.backgroundImage + "')"
+      );
+    } else {
+      backgroundWrapper.style.setProperty(
+        "--set-background-image",
+        "url(/default-bg.jpg)"
+      );
+    }
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("btn-delete");
+    deleteBtn.innerText = "x";
+    deletePerson(deleteBtn, person);
+
+    const profilePic = document.createElement("img");
+    profilePic.classList.add("profile-picture");
+    profilePic.src = person.picture;
+
+    const restWrapper = document.createElement("div");
+    restWrapper.classList.add("div-for-rests");
+
+    const setFirstname = document.createElement("span");
+    setFirstname.classList.add("set-firstname");
+    setFirstname.innerHTML =
+      person.name.title +
+      "." +
       " " +
-      persons[i].name.first +
+      person.name.first +
       " " +
-      persons[i].name.last;
+      person.name.last;
 
-    setJob[i].innerHTML = persons[i].title;
+    const setJob = document.createElement("span");
+    setJob.classList.add("set-job");
+    setJob.innerHTML = person.title;
 
-    setConnections[i].innerHTML =
-      persons[i].mutualConnections + " mutual connections";
+    const setConnections = document.createElement("span");
+    setConnections.classList.add("set-connections");
+    setConnections.innerHTML = person.mutualConnections + " mutual connections";
 
-    profilePicture[i].src = persons[i].picture;
+    const connectBtn = document.createElement("button");
+    connectBtn.classList.add("btn-connect");
+    connectBtn.classList.add("invisible");
+    connectBtn.innerHTML = "Connect";
+    changePending(connectBtn);
 
-    singlePerson[i].style.setProperty(
-      "--set-background-image",
-      "url('" + persons[i].backgroundImage
-    );
-  }
+    newPerson.appendChild(personWrapper);
+    personWrapper.appendChild(cardWrapper);
+    cardWrapper.appendChild(backgroundWrapper);
+    backgroundWrapper.appendChild(deleteBtn);
+    personWrapper.appendChild(profilePic);
+    cardWrapper.appendChild(restWrapper);
+    restWrapper.appendChild(setFirstname);
+    restWrapper.appendChild(setJob);
+    restWrapper.appendChild(setConnections);
+    restWrapper.appendChild(connectBtn);
+
+    list.append(newPerson);
+  });
 }
 renderPersons();
+
+let visible = false;
+let counter = 0;
+const pendingInvs = document.querySelector(".text-pending-invitations");
+
+function changePending(connectBtn) {
+  connectBtn.addEventListener("click", () => {
+    visible = !visible;
+    if (connectBtn.classList.value === "btn-connect invisible") {
+      connectBtn.innerHTML = "Pending";
+      connectBtn.value = "Pending";
+      connectBtn.classList.remove("invisible");
+      counter++;
+      pendingInvs.innerHTML = counter + " Pending invitations";
+    } else {
+      connectBtn.innerHTML = "Connect";
+      connectBtn.value = "Connect";
+      connectBtn.classList.add("invisible");
+      counter--;
+      if (counter === 0) {
+        pendingInvs.innerHTML = "No Pending invitations";
+      } else {
+        pendingInvs.innerHTML = counter + " Pending invitations";
+      }
+    }
+  });
+}
+
+//Delete and add a new person
+function deletePerson(deleteBtn, person) {
+  deleteBtn.addEventListener("click", () => {
+    person.done = true;
+    console.log(person);
+  });
+  persons = persons.filter((person) => person.done === false);
+}
