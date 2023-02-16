@@ -13,7 +13,7 @@ html {
 body {
   margin: 0;
   height: 100%;
-  width: 1000px;
+  width: 100rem;
   margin-left: auto;
   margin-right: auto;
 }
@@ -29,15 +29,25 @@ body {
   background-color: white;
 }
 
+.text-people-nearby {
+  margin-left: 2rem;
+}
+
+.text-see-all {
+  font-weight: 800;
+}
+
 .text-manage {
   font-weight: 800;
+  margin-right: 2rem;
 }
 
 .background-wrapper {
   background-color: white;
-  height: 100rem;
+  height: 80rem;
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 2rem 0rem;
+  padding-right: 4rem;
   font-size: 1.5rem;
 }
 
@@ -47,8 +57,8 @@ body {
   align-items: flex-start;
 }
 
-.overall-card-wrapper,
 ul {
+  list-style: none;
   width: 100%;
   height: auto;
   display: grid;
@@ -105,6 +115,7 @@ ul {
   margin-bottom: 0.5rem;
   font-weight: 800;
   font-size: 1.8rem;
+  text-align: center;
 }
 
 .set-job {
@@ -156,8 +167,4 @@ ul {
   padding-bottom: 0.5rem;
   font-weight: 100;
   cursor: pointer;
-}
-
-ul {
-  list-style: none;
 }

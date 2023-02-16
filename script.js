@@ -1,11 +1,12 @@
-//GET
 const list = document.querySelector("#list");
 const overallWrapper = document.querySelector(".overall-card-wrapper");
 let persons = [];
 let id = 1;
+let counterP = 0;
 
+//GET
 function getPersonData() {
-  for (let i = 0; i < 8; i++) {
+  for (let i = counterP; i < 8; i++) {
     fetch("https://dummy-apis.netlify.app/api/contact-suggestions?count=1")
       .then((request) => request.json())
       .then((people) => {
@@ -13,7 +14,7 @@ function getPersonData() {
           typ.id = id++;
           typ.done = false;
           persons.push(typ.id, typ.done);
-          console.log(persons);
+          counterP++;
         });
         persons = people;
         renderPersons();
@@ -22,6 +23,7 @@ function getPersonData() {
 }
 getPersonData();
 
+//RENDER PEOPLE
 function renderPersons() {
   persons.forEach((person) => {
     const newPerson = document.createElement("li");
@@ -33,9 +35,7 @@ function renderPersons() {
     cardWrapper.classList.add("card-people-wrapper");
 
     const backgroundWrapper = document.createElement("div");
-
     backgroundWrapper.classList.add("div-for-backgroundimg");
-
     if (person.backgroundImage) {
       backgroundWrapper.style.setProperty(
         "--set-background-image",
@@ -51,7 +51,7 @@ function renderPersons() {
     const deleteBtn = document.createElement("button");
     deleteBtn.classList.add("btn-delete");
     deleteBtn.innerText = "x";
-    deletePerson(deleteBtn, person);
+    deletePerson(deleteBtn, newPerson);
 
     const profilePic = document.createElement("img");
     profilePic.classList.add("profile-picture");
@@ -82,7 +82,7 @@ function renderPersons() {
     connectBtn.classList.add("btn-connect");
     connectBtn.classList.add("invisible");
     connectBtn.innerHTML = "Connect";
-    changePending(connectBtn);
+    changePending(connectBtn, deleteBtn);
 
     newPerson.appendChild(personWrapper);
     personWrapper.appendChild(cardWrapper);
@@ -98,13 +98,13 @@ function renderPersons() {
     list.append(newPerson);
   });
 }
-renderPersons();
 
 let visible = false;
 let counter = 0;
 const pendingInvs = document.querySelector(".text-pending-invitations");
 
-function changePending(connectBtn) {
+//CHANGE PENDING AND CONNECT INCL COUNTER
+function changePending(connectBtn, deleteBtn) {
   connectBtn.addEventListener("click", () => {
     visible = !visible;
     if (connectBtn.classList.value === "btn-connect invisible") {
@@ -124,14 +124,19 @@ function changePending(connectBtn) {
         pendingInvs.innerHTML = counter + " Pending invitations";
       }
     }
+    if (connectBtn.innerHTML === "Pending") {
+      deleteBtn.disabled = true;
+    }
   });
 }
 
-//Delete and add a new person
-function deletePerson(deleteBtn, person) {
+//DELETING AND ADDING NEW PEOPLE
+function deletePerson(deleteBtn, newPerson) {
   deleteBtn.addEventListener("click", () => {
-    person.done = true;
-    console.log(person);
+    newPerson.remove();
+    counterP--;
+    for (let i = counterP; i < 8; i++) {
+      getPersonData();
+    }
   });
-  persons = persons.filter((person) => person.done === false);
 }
