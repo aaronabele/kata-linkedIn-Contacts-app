@@ -124,9 +124,6 @@ function changePending(connectBtn, deleteBtn) {
         pendingInvs.innerHTML = counter + " Pending invitations";
       }
     }
-    if (connectBtn.innerHTML === "Pending") {
-      deleteBtn.disabled = true;
-    }
   });
 }
 
