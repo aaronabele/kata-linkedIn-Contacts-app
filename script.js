@@ -2,11 +2,12 @@ const list = document.querySelector("#list");
 const overallWrapper = document.querySelector(".overall-card-wrapper");
 let persons = [];
 let id = 1;
-let counterP = 0;
+let counterPeople = 0;
+let contactCounter = 8;
 
 //GET
 function getPersonData() {
-  for (let i = counterP; i < 8; i++) {
+  for (let i = counterPeople; i < contactCounter; i++) {
     fetch("https://dummy-apis.netlify.app/api/contact-suggestions?count=1")
       .then((request) => request.json())
       .then((people) => {
@@ -14,7 +15,7 @@ function getPersonData() {
           typ.id = id++;
           typ.done = false;
           persons.push(typ.id, typ.done);
-          counterP++;
+          counterPeople++;
         });
         persons = people;
         renderPersons();
@@ -104,7 +105,7 @@ let counter = 0;
 const pendingInvs = document.querySelector(".text-pending-invitations");
 
 //CHANGE PENDING AND CONNECT INCL COUNTER
-function changePending(connectBtn, deleteBtn) {
+function changePending(connectBtn) {
   connectBtn.addEventListener("click", () => {
     visible = !visible;
     if (connectBtn.classList.value === "btn-connect invisible") {
@@ -131,8 +132,8 @@ function changePending(connectBtn, deleteBtn) {
 function deletePerson(deleteBtn, newPerson) {
   deleteBtn.addEventListener("click", () => {
     newPerson.remove();
-    counterP--;
-    for (let i = counterP; i < 8; i++) {
+    counterPeople--;
+    for (let i = counterPeople; i < contactCounter; i++) {
       getPersonData();
     }
   });
