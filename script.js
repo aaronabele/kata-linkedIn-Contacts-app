@@ -3,11 +3,11 @@ const overallWrapper = document.querySelector(".overall-card-wrapper");
 let persons = [];
 let id = 1;
 let counterPeople = 0;
-let contactCounter = 8;
+let contactQty = 8;
 
 //GET
 function getPersonData() {
-  for (let i = counterPeople; i < contactCounter; i++) {
+  for (let i = counterPeople; i < contactQty; i++) {
     fetch("https://dummy-apis.netlify.app/api/contact-suggestions?count=1")
       .then((request) => request.json())
       .then((people) => {
@@ -41,11 +41,6 @@ function renderPersons() {
       backgroundWrapper.style.setProperty(
         "--set-background-image",
         "url('" + person.backgroundImage + "')"
-      );
-    } else {
-      backgroundWrapper.style.setProperty(
-        "--set-background-image",
-        "url(/default-bg.jpg)"
       );
     }
 
@@ -113,17 +108,16 @@ function changePending(connectBtn) {
       connectBtn.value = "Pending";
       connectBtn.classList.remove("invisible");
       counter++;
-      pendingInvs.innerHTML = counter + " Pending invitations";
     } else {
       connectBtn.innerHTML = "Connect";
       connectBtn.value = "Connect";
       connectBtn.classList.add("invisible");
       counter--;
-      if (counter === 0) {
-        pendingInvs.innerHTML = "No Pending invitations";
-      } else {
-        pendingInvs.innerHTML = counter + " Pending invitations";
-      }
+    }
+    if (counter === 0) {
+      pendingInvs.innerHTML = "No Pending invitations";
+    } else {
+      pendingInvs.innerHTML = counter + " Pending invitations";
     }
   });
 }
@@ -133,7 +127,7 @@ function deletePerson(deleteBtn, newPerson) {
   deleteBtn.addEventListener("click", () => {
     newPerson.remove();
     counterPeople--;
-    for (let i = counterPeople; i < contactCounter; i++) {
+    for (let i = counterPeople; i < contactQty; i++) {
       getPersonData();
     }
   });
